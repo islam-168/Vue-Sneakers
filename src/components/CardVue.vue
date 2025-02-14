@@ -4,14 +4,21 @@ defineProps({
   imageUrl: String,
   price: Number,
   isFavorite: Boolean,
-  isAdded: Boolean
+  isAdded: Boolean,
+  onClickAdd: Function, // Прокидываем функцию
+  onClickFavorite: Function,
 })
+
 </script>
 
 <template>
   <div class="relative bg-white border-slate-100 rounded-3xl p-8 cursor-pointer transition hover:-translate-y-2 hover:shadow-xl">
 
-    <img :src="!isFavorite ? '/like-1.svg' : '/like-2.svg'" alt="Like 1" />
+    <img
+      :src="!isFavorite ? '/like-1.svg' : '/like-2.svg'"
+      alt="Like 1"
+      @click="onClickFavorite"
+    />
 
     <img :src="imageUrl" alt="Like 1" />
 
@@ -23,7 +30,7 @@ defineProps({
         <b>{{ price }}$</b>
       </div>
 
-      <img :src="!isAdded ? '/plus.svg' : '/checked.svg'" alt="Plus" />
+      <img @click="onClickAdd" :src="!isAdded ? '/plus.svg' : '/checked.svg'" alt="Plus" />
     </div>
   </div>
 </template>

@@ -1,6 +1,10 @@
 <script setup>
 
 import CardVue from './CardVue.vue'
+
+const onClickAdd = () => {
+  alert('clicked add card')
+}
 </script>
 
 <template>
@@ -14,6 +18,7 @@ import CardVue from './CardVue.vue'
         :price="40"
         :isFavorite="true"
         :isAdded="true"
+        :onClickAdd="onClickAdd"
       />
       <CardVue title="Мужские кроссовки New Blazer Mid Suede" imageUrl="/sneakers/sneakers-1.jpg" :price="40"/>
       <CardVue title="Мужские кроссовки New Blazer Mid Suede" imageUrl="/sneakers/sneakers-1.jpg" :price="40"/>
