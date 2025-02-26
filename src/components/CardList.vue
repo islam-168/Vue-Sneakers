@@ -1,6 +1,16 @@
 <script setup>
 
-import CardVue from './CardVue.vue'
+import Card from './Card.vue'
+
+defineProps({
+  items: Array
+})
+
+const emit = defineEmits(['changeSortBy'])
+
+const onChangeSort = (event) => {
+  emit('changeSortBy', event.target.value);
+}
 
 const onClickAdd = () => {
   alert('clicked add card')
@@ -13,11 +23,11 @@ const onClickAdd = () => {
       <h2 class="text-3xl font-bold mb-8">Все кроссовки</h2>
 
       <div class="flex gap-5">
-        <select class="py-1.5 px-3 border border-gray-300 rounded-md outline-none">
-          <option>По названию</option>
-          <option>По цене (сначала дешевые)</option>
-          <option>По цене (сначала дорогие)</option>
-          <option>По оценкам</option>
+        <select @change="onChangeSort" class="py-1.5 px-3 border border-gray-300 rounded-md outline-none">
+          <option value="">По умолчанию</option>
+          <option value="title">По названию</option>
+          <option value="price">По цене (сначала дешевые)</option>
+          <option value="-price">По цене (сначала дорогие)</option>
         </select>
 
         <div class="relative">
@@ -31,20 +41,14 @@ const onClickAdd = () => {
       </div>
     </div>
     <div class="grid grid-cols-4 gap-5">
-      <CardVue
-        title="Мужские кроссовки New Blazer Mid Suede"
-        imageUrl="/sneakers/sneakers-1.jpg"
-        :price="40"
-        :isFavorite="true"
-        :isAdded="true"
+      <Card
+        v-for="(item, index) in items"
+        :key="index"
+        :title="item.title"
+        :imageUrl="item.imageUrl"
+        :price="item.price"
         :onClickAdd="onClickAdd"
       />
-      <CardVue title="Мужские кроссовки New Blazer Mid Suede" imageUrl="/sneakers/sneakers-1.jpg" :price="40"/>
-      <CardVue title="Мужские кроссовки New Blazer Mid Suede" imageUrl="/sneakers/sneakers-1.jpg" :price="40"/>
-      <CardVue title="Мужские кроссовки New Blazer Mid Suede" imageUrl="/sneakers/sneakers-1.jpg" :price="40"/>
-      <CardVue title="Мужские кроссовки New Blazer Mid Suede" imageUrl="/sneakers/sneakers-1.jpg" :price="40"/>
-      <CardVue title="Мужские кроссовки New Blazer Mid Suede" imageUrl="/sneakers/sneakers-1.jpg" :price="40"/>
-      <CardVue title="Мужские кроссовки New Blazer Mid Suede" imageUrl="/sneakers/sneakers-1.jpg" :price="40"/>
     </div>
   </div>
 </template>
