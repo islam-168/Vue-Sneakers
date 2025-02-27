@@ -1,6 +1,6 @@
 <script setup>
 // Base
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import axios from 'axios'
 // Components
 import Header from '@/components/Header.vue'
@@ -9,8 +9,10 @@ import Drawer from '@/components/Drawer.vue'
 
 const items = ref([])
 
-const sortBy = ref('')
-const searchQuery = ref('')
+const filters = reactive({
+  sortBy: '',
+  searchQuery: ''
+})
 
 onMounted(async () => {
   try {
@@ -21,9 +23,9 @@ onMounted(async () => {
   }
 })
 
-watch(sortBy, async () => { // watch следит за изменениями переменной `sortBy`
+watch(filters, async () => { // watch следит за изменениями переменной `filters`
   try {
-    const { data } = await axios.get('https://4169a22cf4a72ba8.mokky.dev/items?sortBy=' + sortBy.value)
+    const { data } = await axios.get('https://4169a22cf4a72ba8.mokky.dev/items?sortBy=' + filters.sortBy)
     items.value = data
   } catch (error) {
     console.log(error)
@@ -31,7 +33,7 @@ watch(sortBy, async () => { // watch следит за изменениями п
 })
 
 function sortItems(value) {
-  sortBy.value = value
+  filters.sortBy = value
 }
 </script>
 
