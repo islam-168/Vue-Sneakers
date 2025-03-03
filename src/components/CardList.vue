@@ -6,10 +6,14 @@ defineProps({
   items: Array
 })
 
-const emit = defineEmits(['changeSortBy'])
+const emit = defineEmits(['changeSortBy'], ['changeSearchInput'])
 
-const onChangeSort = (event) => {
+const onChangeSelectSort = (event) => {
   emit('changeSortBy', event.target.value);
+}
+
+const onChangeSearchInput = (event) => {
+  emit('changeSearchInput', event.target.value);
 }
 
 const onClickAdd = () => {
@@ -23,7 +27,7 @@ const onClickAdd = () => {
       <h2 class="text-3xl font-bold mb-8">Все кроссовки</h2>
 
       <div class="flex gap-5">
-        <select @change="onChangeSort" class="py-1.5 px-3 border border-gray-300 rounded-md outline-none">
+        <select @change="onChangeSelectSort" class="py-1.5 px-3 border border-gray-300 rounded-md outline-none">
           <option value="">По умолчанию</option>
           <option value="title">По названию</option>
           <option value="price">По цене (сначала дешевые)</option>
@@ -33,6 +37,7 @@ const onClickAdd = () => {
         <div class="relative">
           <img class="absolute left-4 top-2.5" src="/search.svg" alt="Search"/>
           <input
+            @input="onChangeSearchInput"
             class="border border-gray-300 rounded-md py-1.5 pl-11 pr-4 outline-none focus:border-gray-500"
             type="text"
             placeholder="Поиск..."

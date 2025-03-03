@@ -4,7 +4,7 @@ import { onMounted, reactive, ref, watch } from 'vue'
 import axios from 'axios'
 // Components
 import Header from '@/components/Header.vue'
-import CardListVue from '@/components/CardList.vue'
+import CardList from '@/components/CardList.vue'
 import Drawer from '@/components/Drawer.vue'
 
 const items = ref([])
@@ -14,26 +14,37 @@ const filters = reactive({
   searchQuery: ''
 })
 
-onMounted(async () => {
+const fetchItems = async () => {
   try {
-    const { data } = await axios.get('https://4169a22cf4a72ba8.mokky.dev/items')
-    items.value = data
-  } catch (error) {
-    console.log(error)
-  }
-})
+    const params = {
+      sortBy: filters.sortBy
+    }
 
-watch(filters, async () => { // watch следит за изменениями переменной `filters`
-  try {
-    const { data } = await axios.get('https://4169a22cf4a72ba8.mokky.dev/items?sortBy=' + filters.sortBy)
+    if (filters.searchQuery) {
+      params.title = `*${filters.searchQuery}*`
+    }
+
+    const { data } = await axios.get(
+      'https://4169a22cf4a72ba8.mokky.dev/items',
+      {
+        params,
+      }
+    )
     items.value = data
   } catch (error) {
     console.log(error)
   }
-})
+}
+
+onMounted(fetchItems)
+watch(filters, fetchItems)
 
 function sortItems(value) {
   filters.sortBy = value
+}
+
+function searchItems(value) {
+  filters.searchQuery = value
 }
 </script>
 
@@ -42,6 +53,6 @@ function sortItems(value) {
   <div class="bg-white w-4/5 m-auto rounded-xl shadow-xl mt-8">
     <Header />
 
-    <CardListVue :items="items" @changeSortBy="sortItems" />
+    <CardList :items="items" @changeSortBy="sortItems" @changeSearchInput="searchItems" />
   </div>
 </template>
