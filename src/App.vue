@@ -14,6 +14,30 @@ const filters = reactive({
   searchQuery: ''
 })
 
+const fetchFavorites = async () => {
+  try {
+    const { data: favorites } = await axios.get('https://4169a22cf4a72ba8.mokky.dev/favorites')
+    // data: favorites - переименования свойства data из axios в favorites
+    items.value = items.value.map(item => {
+      const favorite = favorites.find((favorite) => favorite.sneakerId === item.id)
+
+      if (!favorite) return item
+
+      return {
+        ...item,
+        isFavorite: true,
+        favoriteId: favorite.id
+      }
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const addToFavorite = async (item) => {
+  item.isFavorite = true
+}
+
 const fetchItems = async () => {
   try {
     const params = {
@@ -30,13 +54,20 @@ const fetchItems = async () => {
         params,
       }
     )
-    items.value = data
+    items.value = data.map((item) => ({
+      ...item,
+      isFavorite: false,
+      isAdded: false,
+    }))
   } catch (error) {
     console.log(error)
   }
 }
 
-onMounted(fetchItems)
+onMounted(async () => {
+  await fetchItems()
+  await fetchFavorites()
+})
 watch(filters, fetchItems)
 
 function sortItems(value) {
