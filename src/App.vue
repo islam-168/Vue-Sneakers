@@ -35,7 +35,24 @@ const fetchFavorites = async () => {
 }
 
 const addToFavorite = async (item) => {
-  item.isFavorite = true
+  try {
+    if (!item.isFavorite) {
+      const obj = {
+        sneakerId: item.id,
+      }
+      const {data} = await axios.post('https://4169a22cf4a72ba8.mokky.dev/favorites', obj)
+
+      item.isFavorite = true
+      item.favoriteId = data.id
+    } else {
+      await axios.delete(`https://4169a22cf4a72ba8.mokky.dev/favorites/${item.favoriteId}`)
+
+      item.isFavorite = false
+      item.favoriteId = null
+    }
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 const fetchItems = async () => {
@@ -57,6 +74,7 @@ const fetchItems = async () => {
     items.value = data.map((item) => ({
       ...item,
       isFavorite: false,
+      favoriteId: null,
       isAdded: false,
     }))
   } catch (error) {
@@ -84,6 +102,11 @@ function searchItems(value) {
   <div class="bg-white w-4/5 m-auto rounded-xl shadow-xl mt-8">
     <Header />
 
-    <CardList :items="items" @changeSortBy="sortItems" @changeSearchInput="searchItems" />
+    <CardList
+      :items="items"
+      @changeSortBy="sortItems"
+      @changeSearchInput="searchItems"
+      @addToFavorite="addToFavorite"
+    />
   </div>
 </template>

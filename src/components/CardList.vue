@@ -1,12 +1,15 @@
 <script setup>
-
-import Card from './Card.vue'
+import SneakerCard from './SneakerCard.vue'
 
 defineProps({
   items: Array
 })
 
-const emit = defineEmits(['changeSortBy'], ['changeSearchInput'])
+const emit = defineEmits(
+  ['changeSortBy'],
+  ['changeSearchInput'],
+  ['addToFavorite']
+)
 
 const onChangeSelectSort = (event) => {
   emit('changeSortBy', event.target.value);
@@ -17,7 +20,7 @@ const onChangeSearchInput = (event) => {
 }
 
 const onClickAdd = () => {
-  alert('clicked add card')
+  alert('Add new card');
 }
 </script>
 
@@ -46,13 +49,15 @@ const onClickAdd = () => {
       </div>
     </div>
     <div class="grid grid-cols-4 gap-5">
-      <Card
+      <SneakerCard
         v-for="(item, index) in items"
         :key="index"
+        :id="item.id"
         :title="item.title"
         :imageUrl="item.imageUrl"
         :price="item.price"
         :onClickAdd="onClickAdd"
+        :onClickFavorite="() => emit('addToFavorite', item)"
         :isFavorite="item.isFavorite"
       />
     </div>
